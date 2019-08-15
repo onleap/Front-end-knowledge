@@ -21,6 +21,7 @@
 <body>
 	<div class="app">
 		<ul id="ul">
+			<!-- 此处可自定义显示li的数量 -->
 			<li></li><li></li><li></li><li></li><li></li>
 		</ul>
 		<div id="but">
@@ -40,21 +41,22 @@
 				number = 5,//尽量设置成奇数，美观
 				lis = ul.getElementsByTagName('li'),
 				as = btns.getElementsByTagName('div');
-
-			for(let i = 0;i < (Math.ceil(arr.length / 5) - 1);i++){
+			// 根据需要显示数据的数量来分多少页
+			for(let i = 0;i < (Math.ceil(arr.length / lis.length) - 1);i++){
 				let s = i + 2,
 				 	newNode = document.createElement('div');
 				newNode.innerHTML = s;
 				btns.appendChild(newNode);
 			}
 			action();
-
+			// 利用es6 的语言给各个翻页器按钮绑定事件
 			for(let i = 0; i < as.length; i++){
 				as[i].onclick = function(){
 					index = i;
 					action();
 				}
 			}
+			// 上一页
 			left.onclick = function(){
 				index--;
 				if(index < 0){
@@ -62,6 +64,7 @@
 				}
 				action();
 			}
+			// 下一页
 			right.onclick = function(){
 				index++;
 				if(index > as.length - 1){
@@ -69,10 +72,12 @@
 				}
 				action();
 			}
+			// 首页
 			first.onclick = function(){
 				index = 0;
 				action();
 			}
+			// 尾页
 			foot.onclick = function(){
 				index = as.length - 1;
 				action();
