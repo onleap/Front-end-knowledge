@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>原生翻页</title>
+</head>
+<style>
+  	*{margin:0;padding: 0;}
+	.app{width: 50%;min-width:500px;margin-left: 50%;transform: translate(-50%);}
+	ul,li{list-style: none;font-size: 25px;line-height: 35px;}
+	#ul{height: 180px;}
+	#but a{display: inline-block;border: 1px solid green;height: 25px;font-size: 18px;text-align: center;padding: 2px 10px;text-decoration: none;}
+	#btns{display: inline-block;}
+	#first,#left {display: none;}
+	#btns div{display: inline-block;border: 1px solid green;height: 25px;font-size: 18px;line-height: 25px;text-align: center;padding: 2px 10px;margin-left: 8px;cursor: pointer;}
+	#btns div:nth-child(1),#btns div:nth-child(2){margin-left: 0;}
+	.btn{background:rgb(107,224,107);}
+</style>
+<body>
+	<div class="app">
+		<ul id="ul">
+			<li></li><li></li><li></li><li></li><li></li>
+		</ul>
+		<div id="but">
+			<a id="first" href="javascript:(0)">首页</a>
+			<a id="left" href="javascript:(0)">上一页</a>
+			<div id="btns">
+				<div class="btn">1</div>
+			</div>
+			<a id="right" href="javascript:(0)">下一页</a>
+			<a id="foot" href="javascript:(0)">尾页</a>
+		</div>
+
+		<script>
+			const arr = ['News In juejin (china) - 1','News In juejin (china) - 2','News In juejin (china) - 3','News In juejin (china) - 4','News In juejin (china) - 5','News In juejin (china) - 6','News In juejin (china) - 7','News In juejin (china) - 8','News In juejin (china) - 9','News In juejin (china) - 10','News In juejin (china) - 11','News In juejin (china) - 12','News In juejin (china) - 13','News In juejin (china) - 14','News In juejin (china) - 15','News In juejin (china) - 16','News In juejin (china) - 17','News In juejin (china) - 18','News In juejin (china) - 19','News In juejin (china) - 20','News In juejin (china) - 21','News In juejin (china) - 22','News In juejin (china) - 23','News In juejin (china) - 24','News In juejin (china) - 25','News In juejin (china) - 26','News In juejin (china) - 27','News In juejin (china) - 28'];
+			let [ul,btns,but,left,right,first,foot] = [getId('ul'),getId('btns'),getId('but'),getId('left'),getId('right'),getId('first'),getId('foot')],
+				index = 0,
+				number = 5,//尽量设置成奇数，美观
+				lis = ul.getElementsByTagName('li'),
+				as = btns.getElementsByTagName('div');
+
+			for(let i = 0;i < (Math.ceil(arr.length / 5) - 1);i++){
+				let s = i + 2,
+				 	newNode = document.createElement('div');
+				newNode.innerHTML = s;
+				btns.appendChild(newNode);
+			}
+			action();
+
+			for(let i = 0; i < as.length; i++){
+				as[i].onclick = function(){
+					index = i;
+					action();
+				}
+			}
+			left.onclick = function(){
+				index--;
+				if(index < 0){
+					index = 0;
+				}
+				action();
+			}
+			right.onclick = function(){
+				index++;
+				if(index > as.length - 1){
+					index = as.length - 1;
+				}
+				action();
+			}
+			first.onclick = function(){
+				index = 0;
+				action();
+			}
+			foot.onclick = function(){
+				index = as.length - 1;
+				action();
+			}
+
+			function action(){
+				if(index === 0){
+					first.style.display = "none";
+					left.style.display = "none";
+					foot.style.display = "inline-block";
+					right.style.display = "inline-block";
+				}else if(index === as.length - 1){
+					first.style.display = "inline-block";
+					left.style.display = "inline-block";
+					foot.style.display = "none";
+					right.style.display = "none";
+				}else{
+					first.style.display = "inline-block";
+					left.style.display = "inline-block";
+					foot.style.display = "inline-block";
+					right.style.display = "inline-block";
+				}
+				// 控制中间的页数值显示固定数量
+				if(as.length > number){
+					let num_mid = parseInt(number/2)+1;
+					for(let i = 0; i < as.length; i++){
+						as[i].style.display = 'none';
+					}
+					if(index < num_mid){
+						// 头
+						for(let i = 0; i < as.length; i++){
+							if(i < number){
+								as[i].style.display = 'inline-block';
+							}
+						}
+					}else if(index >= num_mid && index < as.length - num_mid){
+						// 中间
+						for(let i = 0; i < as.length; i++){
+							if(i >= (index - num_mid + 1) && i < (index - num_mid + 1 + number)){
+								as[i].style.display = 'inline-block';
+							}
+						}
+					}else if(index >= as.length - num_mid){
+						// 尾
+						for(let i = 0; i < as.length; i++){
+							if(i >= as.length - number){
+								as[i].style.display = 'inline-block';
+							}
+						}
+					}
+				}
+				for(let i = 0; i < as.length; i++){
+					as[i].className = '';
+				}
+				as[index].className = 'btn';
+				for(let i = 0; i < lis.length; i++){
+					if(i + 5 * index < arr.length){
+						lis[i].style.display = 'block';
+						lis[i].innerHTML = arr[i + 5 * index];
+					}else{
+						lis[i].style.display = 'none';
+					}
+				}
+			}
+
+			function getId(str){
+				return document.getElementById(str);
+			}
+		</script>
+	</div>  
+</body>
+</html>
