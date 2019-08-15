@@ -134,9 +134,9 @@
 				}
 				as[index].className = 'btn';
 				for(let i = 0; i < lis.length; i++){
-					if(i + 5 * index < arr.length){
+					if(i + lis.length * index < arr.length){
 						lis[i].style.display = 'block';
-						lis[i].innerHTML = arr[i + 5 * index];
+						lis[i].innerHTML = arr[i + lis.length * index];
 					}else{
 						lis[i].style.display = 'none';
 					}
